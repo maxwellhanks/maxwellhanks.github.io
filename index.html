@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maxwell Hanks — Mathematics · Quantitative Projects</title>
+<meta name="description" content="Maxwell Hanks — Bachelor of Mathematics (Mathematical AI / CS) at UQ. Projects in statistical arbitrage, stochastic control, and factor risk modelling.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js');</script>
+<style>
+/* ============ Tokens ============ */
+:root{
+  --bg:#191b16;          /* warm charcoal-olive */
+  --surface:#21241d;
+  --surface-2:#292d24;
+  --line:#373c2e;
+  --text:#edeadf;        /* warm off-white */
+  --muted:#aaa896;
+  --accent:#bcd47f;      /* soft moss green */
+  --brass:#e2b183;       /* warm amber — the human notes */
+  --font-display:"Bricolage Grotesque",system-ui,sans-serif;
+  --font-body:"Figtree",system-ui,sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,monospace;
+  /* spacing scale: 4px base */
+  --s1:.25rem; --s2:.5rem; --s3:.75rem; --s4:1rem;
+  --s5:1.5rem; --s6:2.5rem; --s7:4rem; --s8:6rem;
+  --radius:14px;
+  --maxw:70rem;
+}
+@media (prefers-reduced-motion:no-preference){
+  html{scroll-behavior:smooth;}
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  font-size:1rem;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block;}
+a{color:var(--accent);text-decoration:none;}
+a:hover{text-decoration:underline;text-underline-offset:3px;}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px;}
+
+.skip-link{
+  position:absolute;left:var(--s4);top:-3rem;z-index:100;
+  background:var(--accent);color:var(--bg);font-weight:600;
+  padding:var(--s2) var(--s4);border-radius:8px;transition:top .15s;
+}
+.skip-link:focus{top:var(--s4);}
+
+.wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--s4);}
+@media(min-width:48rem){.wrap{padding-inline:var(--s6);}}
+
+/* ============ Header ============ */
+.site-header{
+  position:sticky;top:0;z-index:50;
+  background:color-mix(in srgb,var(--bg) 86%,transparent);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.site-header .wrap{
+  display:flex;align-items:center;gap:var(--s4);
+  padding-block:var(--s3);
+}
+.logo{
+  font-family:var(--font-mono);font-size:.95rem;font-weight:500;
+  color:var(--text);letter-spacing:.02em;white-space:nowrap;
+}
+.logo em{color:var(--accent);font-style:normal;}
+.site-nav{margin-left:auto;overflow-x:auto;}
+.site-nav ul{
+  display:flex;gap:var(--s4);list-style:none;align-items:center;
+}
+.site-nav a{
+  color:var(--muted);font-size:.92rem;font-weight:500;white-space:nowrap;
+  padding:var(--s1) 0;
+}
+.site-nav a:hover{color:var(--text);text-decoration:none;}
+.nav-icons{display:flex;gap:var(--s3);align-items:center;margin-left:var(--s2);}
+.nav-icons a{color:var(--muted);display:inline-flex;}
+.nav-icons a:hover{color:var(--accent);}
+.nav-icons svg{width:19px;height:19px;fill:currentColor;}
+
+/* ============ Hero ============ */
+.hero{padding-block:var(--s7) var(--s6);border-bottom:1px solid var(--line);}
+.hero-grid{display:grid;gap:var(--s6);}
+@media(min-width:56rem){
+  .hero-grid{grid-template-columns:1.15fr .85fr;align-items:center;}
+}
+.hero-id{display:flex;align-items:center;gap:var(--s4);margin-bottom:var(--s5);}
+.avatar{
+  width:72px;height:72px;border-radius:50%;
+  background:linear-gradient(135deg,var(--surface-2),var(--surface));
+  border:1px solid var(--line);
+  display:grid;place-items:center;flex-shrink:0;
+  font-family:var(--font-mono);color:var(--accent);font-size:1.15rem;
+}
+/* Swap the .avatar div for:
+   <img class="avatar" src="me.jpg" alt="Maxwell Hanks"> (add object-fit:cover) */
+.hero-kicker{
+  font-family:var(--font-mono);font-size:.8rem;color:var(--muted);
+  letter-spacing:.04em;
+}
+.hero-kicker strong{color:var(--brass);font-weight:500;}
+.hero h1{
+  font-family:var(--font-display);
+  font-size:clamp(2.3rem,6vw,3.6rem);
+  font-weight:700;line-height:1.05;letter-spacing:-.02em;
+  margin-bottom:var(--s4);
+}
+.hero h1 .accent{color:var(--accent);}
+.hero .lede{
+  color:var(--muted);font-size:1.06rem;max-width:34rem;margin-bottom:var(--s5);
+}
+.hero .lede strong{color:var(--text);font-weight:500;}
+.cta-row{display:flex;flex-wrap:wrap;gap:var(--s3);}
+.btn{
+  display:inline-flex;align-items:center;gap:var(--s2);
+  font-weight:600;font-size:.95rem;
+  padding:var(--s3) var(--s5);border-radius:999px;
+  border:1px solid var(--line);color:var(--text);
+}
+.btn:hover{text-decoration:none;border-color:var(--muted);}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:#14160f;}
+.btn-primary:hover{background:#cbe093;border-color:#cbe093;}
+
+/* Signature: mean-reverting spread chart */
+.spread-card{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:var(--s4) var(--s4) var(--s3);
+}
+.spread-card figcaption{
+  font-family:var(--font-mono);font-size:.72rem;color:var(--muted);
+  display:flex;justify-content:space-between;gap:var(--s3);
+  margin-top:var(--s2);flex-wrap:wrap;
+}
+.spread-card svg{width:100%;height:auto;display:block;}
+.spread-path{
+  stroke:var(--accent);stroke-width:2;fill:none;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+@media (prefers-reduced-motion:no-preference){
+  .spread-path{
+    stroke-dasharray:1400;stroke-dashoffset:1400;
+    animation:draw 2.4s ease-out .9s forwards;
+  }
+  @keyframes draw{to{stroke-dashoffset:0;}}
+}
+.spread-mean{stroke:var(--muted);stroke-width:1;stroke-dasharray:6 6;}
+.spread-band{stroke:var(--line);stroke-width:1;stroke-dasharray:2 5;}
+.spread-label{font-family:var(--font-mono);font-size:11px;fill:var(--muted);}
+
+/* Scan strip */
+.scan-strip{border-bottom:1px solid var(--line);background:var(--surface);}
+.scan-strip .wrap{
+  display:grid;gap:var(--s4);padding-block:var(--s5);
+}
+@media(min-width:40rem){.scan-strip .wrap{grid-template-columns:repeat(3,1fr);}}
+.stat .num{
+  font-family:var(--font-mono);font-size:1.5rem;color:var(--accent);font-weight:500;
+}
+.stat .lbl{font-size:.88rem;color:var(--muted);}
+
+/* ============ Sections ============ */
+.section{padding-block:var(--s7);border-bottom:1px solid var(--line);}
+.eyebrow{
+  font-family:var(--font-mono);font-size:.78rem;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--brass);
+  display:flex;align-items:center;gap:var(--s3);margin-bottom:var(--s3);
+}
+.eyebrow::after{content:"";height:1px;width:2.5rem;background:var(--line);}
+.section h2{
+  font-family:var(--font-display);font-weight:600;
+  font-size:clamp(1.6rem,3.5vw,2.1rem);letter-spacing:-.01em;
+  margin-bottom:var(--s5);
+}
+.section-intro{color:var(--muted);max-width:38rem;margin:calc(-1*var(--s3)) 0 var(--s5);}
+
+/* Projects bento */
+.bento{display:grid;gap:var(--s4);}
+@media(min-width:48rem){
+  .bento{grid-template-columns:repeat(2,1fr);}
+  .bento .span-2{grid-column:span 2;}
+}
+.card{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius);padding:var(--s5);
+  display:flex;flex-direction:column;gap:var(--s3);
+}
+.card:hover{border-color:#4a5140;}
+.card .meta{
+  font-family:var(--font-mono);font-size:.74rem;color:var(--muted);
+  display:flex;justify-content:space-between;gap:var(--s3);flex-wrap:wrap;
+}
+.card h3{
+  font-family:var(--font-display);font-size:1.25rem;font-weight:600;line-height:1.25;
+}
+.card h3 a{color:var(--text);}
+.card h3 a:hover{color:var(--accent);text-decoration:none;}
+.metric-row{display:flex;gap:var(--s5);flex-wrap:wrap;}
+.metric .num{
+  font-family:var(--font-mono);font-size:1.35rem;color:var(--accent);
+}
+.metric .lbl{font-size:.8rem;color:var(--muted);}
+.card p{color:var(--muted);font-size:.94rem;}
+.chip-row{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:auto;}
+.chip{
+  font-family:var(--font-mono);font-size:.72rem;color:var(--text);
+  background:var(--surface-2);border:1px solid var(--line);
+  padding:.2rem .6rem;border-radius:999px;white-space:nowrap;
+}
+
+/* About */
+.about-copy p:not(.eyebrow){margin-bottom:var(--s4);color:var(--muted);}
+.about-copy p strong{color:var(--text);font-weight:500;}
+.resume-embed{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  overflow:hidden;
+}
+.resume-embed object{width:100%;height:480px;display:block;}
+.resume-fallback{padding:var(--s5);color:var(--muted);font-size:.94rem;}
+.resume-embed .bar{
+  display:flex;justify-content:space-between;align-items:center;gap:var(--s3);
+  padding:var(--s3) var(--s4);border-top:1px solid var(--line);
+  font-family:var(--font-mono);font-size:.78rem;color:var(--muted);
+}
+
+/* Education & Experience shared list style */
+.timeline{display:grid;gap:var(--s4);}
+.entry{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:var(--s5);
+}
+.entry .top{
+  display:flex;justify-content:space-between;gap:var(--s3);flex-wrap:wrap;
+  margin-bottom:var(--s2);
+}
+.entry h3{font-family:var(--font-display);font-size:1.1rem;font-weight:600;}
+.entry .org{color:var(--muted);font-size:.92rem;}
+.entry .when{font-family:var(--font-mono);font-size:.76rem;color:var(--brass);white-space:nowrap;}
+.entry p{color:var(--muted);font-size:.94rem;}
+.entry ul{list-style:none;display:flex;flex-direction:column;gap:var(--s2);color:var(--muted);font-size:.94rem;}
+.entry ul li{padding-left:var(--s4);position:relative;}
+.entry ul li::before{content:"—";position:absolute;left:0;color:var(--accent);}
+
+/* Skills */
+.skills-grid{display:grid;gap:var(--s4);}
+@media(min-width:48rem){.skills-grid{grid-template-columns:repeat(3,1fr);}}
+.skill-group h3{
+  font-family:var(--font-mono);font-size:.8rem;font-weight:500;
+  text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
+  margin-bottom:var(--s3);
+}
+
+/* Music */
+.music{background:var(--surface);}
+.music-grid{display:grid;gap:var(--s4);}
+@media(min-width:48rem){.music-grid{grid-template-columns:repeat(3,1fr);}}
+.music .entry{background:var(--bg);}
+.music .entry .role{font-family:var(--font-mono);font-size:.76rem;color:var(--brass);margin-bottom:var(--s2);}
+.staff{margin-top:var(--s5);opacity:.5;}
+.staff svg{width:100%;height:28px;display:block;}
+.staff line{stroke:var(--line);stroke-width:1;}
+.staff circle{fill:var(--brass);}
+
+/* ============ Reading — iPod-classic Cover Flow ============ */
+.reading .ipod{
+  background:linear-gradient(180deg,#101210,#171914);
+  border:1px solid var(--line);border-radius:var(--radius);
+  padding:var(--s5) var(--s4) var(--s4);
+}
+/* No-JS fallback: a simple scrollable shelf */
+.coverflow{display:flex;gap:var(--s4);overflow-x:auto;padding-bottom:var(--s3);}
+.book{flex:0 0 auto;margin:0;}
+html:not(.js) .nowplaying,html:not(.js) .flow-controls{display:none;}
+/* JS on: 3D Cover Flow */
+html.js .coverflow{
+  display:block;position:relative;height:300px;overflow:hidden;
+  perspective:1100px;touch-action:pan-y;cursor:grab;
+}
+html.js .book{
+  position:absolute;left:50%;top:50%;
+  will-change:transform;cursor:pointer;
+}
+@media (prefers-reduced-motion:no-preference){
+  html.js .book{transition:transform .45s cubic-bezier(.25,.8,.3,1),opacity .45s ease;}
+}
+.cover{
+  width:150px;height:205px;border-radius:2px 6px 6px 2px;
+  padding:14px 12px;display:flex;flex-direction:column;justify-content:space-between;
+  box-shadow:inset 10px 0 14px -10px rgba(0,0,0,.55),0 10px 24px rgba(0,0,0,.45);
+  position:relative;overflow:hidden;
+  -webkit-box-reflect:below 2px linear-gradient(transparent 62%,rgba(255,255,255,.15));
+}
+.cover::before{ /* gloss */
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(115deg,rgba(255,255,255,.22),rgba(255,255,255,0) 45%);
+  pointer-events:none;
+}
+.cover.has-img{padding:0;}
+.cover.has-img img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  user-select:none;-webkit-user-drag:none;
+}
+.b-title{font-family:var(--font-display);font-weight:600;font-size:.86rem;line-height:1.25;}
+.b-author{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.02em;opacity:.85;}
+/* Cover colourways */
+.c1{background:#e3bd4d;color:#241d08;}
+.c2{background:#7c2f2a;color:#f3e4dc;}
+.c3{background:#2e4a6b;color:#e8eef6;}
+.c4{background:#3f5a3c;color:#e9f0e4;}
+.c5{background:#e8e0c9;color:#26221a;}
+.c6{background:#b06636;color:#f7e9dc;}
+/* "Now playing" caption */
+.nowplaying{
+  text-align:center;margin-top:var(--s4);
+  display:flex;flex-direction:column;gap:2px;
+}
+.nowplaying .np-title{font-family:var(--font-display);font-weight:600;}
+.nowplaying .np-author{font-family:var(--font-mono);font-size:.76rem;color:var(--muted);}
+.nowplaying .np-index{font-family:var(--font-mono);font-size:.68rem;color:var(--brass);margin-top:2px;}
+.flow-controls{display:flex;justify-content:center;gap:var(--s3);margin-top:var(--s3);}
+.flow-btn{
+  width:42px;height:42px;border-radius:50%;
+  background:var(--surface-2);border:1px solid var(--line);color:var(--text);
+  font-size:1.2rem;line-height:1;cursor:pointer;
+}
+.flow-btn:hover{border-color:var(--muted);color:var(--accent);}
+@media (max-width:600px){
+  html.js .coverflow{height:238px;}
+  .cover{width:118px;height:162px;padding:10px;}
+  .b-title{font-size:.7rem;}
+  .b-author{font-size:.54rem;}
+}
+
+/* Footer */
+.site-footer{padding-block:var(--s6);}
+.site-footer .wrap{
+  display:flex;flex-wrap:wrap;gap:var(--s4);align-items:center;justify-content:space-between;
+}
+.footer-links{display:flex;gap:var(--s4);flex-wrap:wrap;}
+.footer-links a{color:var(--muted);font-size:.92rem;}
+.footer-links a:hover{color:var(--accent);}
+.site-footer .fine{font-family:var(--font-mono);font-size:.74rem;color:var(--muted);}
+
+/* ============ Motion ============ */
+section[id],#top{scroll-margin-top:4.5rem;} /* anchors clear the sticky header */
+
+@media (prefers-reduced-motion:no-preference){
+  /* Hero entrance: staggered rise on page load (pure CSS, works without JS) */
+  [data-reveal]{
+    animation:rise .7s cubic-bezier(.22,.9,.3,1) both;
+    animation-delay:calc(var(--i,0)*95ms + .1s);
+  }
+  @keyframes rise{
+    from{opacity:0;translate:0 18px;}
+    to{opacity:1;translate:0 0;}
+  }
+
+  /* Scroll-triggered reveals: JS adds .in-view; without JS nothing is ever hidden.
+     Reveal uses `translate` while hover uses `transform`, so the two never fight. */
+  html.js [data-animate],
+  html.js [data-stagger]>*{
+    opacity:0;translate:0 16px;
+    transition:
+      opacity .7s ease var(--d,0s),
+      translate .7s cubic-bezier(.22,.9,.3,1) var(--d,0s),
+      transform .25s ease,
+      box-shadow .25s ease,
+      border-color .25s ease;
+  }
+  html.js [data-animate].in-view,
+  html.js [data-stagger]>.in-view{opacity:1;translate:0 0;}
+
+  /* Eyebrows always stay opaque (don't fade in) */
+  html.js .eyebrow{opacity:1 !important;}
+
+  /* Hover micro-interactions */
+  .btn{transition:transform .18s ease,background .18s ease,border-color .18s ease;}
+  @media (hover:hover){
+    .btn:hover{transform:translateY(-2px);}
+    .card:hover,.timeline .entry:hover,.music .entry:hover{
+      transform:translateY(-4px);
+      box-shadow:0 14px 30px rgba(0,0,0,.35);
+      border-color:#4a5140;
+    }
+  }
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="Maxwell Hanks — home">maxwell<em>@</em>hanks<em>:~$</em></a>
+    <nav class="site-nav" aria-label="Primary">
+      <ul>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#reading">Reading</a></li>
+        <li><a href="#music">Music</a></li>
+      </ul>
+    </nav>
+    <div class="nav-icons">
+      <a href="https://github.com/maxwellhanks" aria-label="GitHub profile">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+      </a>
+      <a href="https://linkedin.com/in/maxwell-hanks" aria-label="LinkedIn profile">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13.6 0H2.4C1.1 0 0 1.1 0 2.4v11.2C0 14.9 1.1 16 2.4 16h11.2c1.3 0 2.4-1.1 2.4-2.4V2.4C16 1.1 14.9 0 13.6 0ZM4.9 13.6H2.5V6.2h2.4v7.4ZM3.7 5.1a1.4 1.4 0 1 1 0-2.8 1.4 1.4 0 0 1 0 2.8Zm9.9 8.5h-2.4V9.9c0-.9 0-2-1.2-2s-1.4 1-1.4 2v3.7H6.2V6.2h2.3v1h.1c.3-.6 1.1-1.2 2.3-1.2 2.4 0 2.9 1.6 2.9 3.7v3.9Z"/></svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="hero-id" data-reveal style="--i:0">
+        <!-- Replace with <img class="avatar" src="me.jpg" alt="Maxwell Hanks" style="object-fit:cover"> -->
+        <div class="avatar" aria-hidden="true">mh</div>
+        <p class="hero-kicker">Brisbane, AU · <strong>BMath ’27</strong> · The University of Queensland</p>
+      </div>
+      <h1 data-reveal style="--i:1">Math AI student<br>at <span class="accent">UQ</span>.</h1>
+      <p class="lede" data-reveal style="--i:2">I’m Maxwell - a second-year Bachelor of Mathematics student (Mathematical AI + Computer Science) at UQ. I build projects across <strong>statistical machine learning</strong>, <strong>finance</strong>, and <strong>mathematical modelling</strong>, and read the wonderful literature behind them for fun.</p>
+      <p class="lede" data-reveal style="--i:3"><strong>Reading:</strong> Reliability and Risk - A Bayesian Perspective</p>
+      <div class="cta-row" data-reveal style="--i:4">
+        <a class="btn btn-primary" href="#projects">See the projects</a>
+        <a class="btn" href="Hanks_Maxwell_Resume.pdf" download>Download resume</a>
+      </div>
+    </div>
+
+    <figure class="spread-card" data-reveal style="--i:3" role="img" aria-label="Chart of a mean-reverting spread oscillating around its long-run mean between two-sigma bands">
+      <svg viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <line class="spread-band" x1="0" y1="55"  x2="516" y2="55"/>
+        <line class="spread-mean" x1="0" y1="105" x2="516" y2="105"/>
+        <line class="spread-band" x1="0" y1="155" x2="516" y2="155"/>
+        <text class="spread-label" x="524" y="59">+2σ</text>
+        <text class="spread-label" x="524" y="109">μ</text>
+        <text class="spread-label" x="524" y="159">−2σ</text>
+        <path class="spread-path" d="M0,105 C14,84 26,66 40,72 C54,78 62,118 78,128 C94,138 104,96 118,84 C132,72 142,60 156,70 C170,80 180,120 196,132 C212,144 224,110 238,98 C252,86 262,74 278,80 C294,86 304,124 318,134 C332,144 344,104 358,90 C372,76 384,64 398,74 C412,84 422,116 438,126 C454,136 466,100 480,92 C494,84 506,98 516,105"/>
+      </svg>
+      <figcaption>
+        <span>ou_spread · pair #7</span>
+        <span>half-life ≈ 4.2d</span>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ 30-SECOND SCAN STRIP ============ -->
+<section class="scan-strip" aria-label="Highlights">
+  <div class="wrap" data-stagger>
+    <div class="stat">
+      <div class="num"><span data-count="161">161</span> / 394</div>
+      <div class="lbl">Susquehanna Algothon ’26 — market-neutral stat-arb strategy</div>
+    </div>
+    <div class="stat">
+      <div class="num"><span data-count="6.25" data-sep>6.25</span> / 7.00</div>
+      <div class="lbl">cumulative GPA (83 WAM)</div>
+    </div>
+    <div class="stat">
+      <div class="num"><span data-count="250">250</span>+ hrs</div>
+      <div class="lbl">teaching mathematics to high-school students</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROJECTS ============ -->
+<section class="section" id="projects">
+  <div class="wrap">
+    <p class="eyebrow" data-animate>Projects</p>
+    <h2 data-animate>Built to be backtested</h2>
+    <p class="section-intro" data-animate>Three quantitative projects, each validated out-of-sample. Code on <a href="https://github.com/maxwellhanks">GitHub</a>.</p>
+
+    <div class="bento" data-stagger>
+      <article class="card span-2">
+        <div class="meta"><span>2026 · Python</span><span>statistical arbitrage</span></div>
+        <h3><a href="https://github.com/maxwellhanks/Susquehanna-Algothon-26-Strategy">Susquehanna Algothon ’26 — market-neutral stat-arb</a></h3>
+        <div class="metric-row">
+          <div class="metric"><div class="num"><span data-count="161">161</span>/394</div><div class="lbl">final placing</div></div>
+          <div class="metric"><div class="num"><span data-count="51">51</span></div><div class="lbl">instruments traded</div></div>
+          <div class="metric"><div class="num">OU</div><div class="lbl">spread dynamics</div></div>
+        </div>
+        <p>Selected cointegrated pairs offline via Engle–Granger and ADF stationarity testing, modelled mean-reverting spreads as Ornstein–Uhlenbeck processes, and hedged residual exposure against the index. Volatility-scaled sizing; validated by walk-forward backtesting on unseen data.</p>
+        <div class="chip-row"><span class="chip">cointegration</span><span class="chip">ADF / Engle–Granger</span><span class="chip">walk-forward</span><span class="chip">vol targeting</span></div>
+      </article>
+
+      <article class="card">
+        <div class="meta"><span>2026 · Python, MATLAB</span></div>
+        <h3><a href="https://github.com/maxwellhanks/Optimal-Execution-via-HJB-and-Neural-Networks">Optimal execution via HJB &amp; neural networks</a></h3>
+        <div class="metric-row">
+          <div class="metric"><div class="num">ε-opt</div><div class="lbl">validated vs dynamic programming</div></div>
+        </div>
+        <p>Formulated liquidation as continuous-time stochastic control, solved the linear-quadratic benchmark analytically, and extended to nonlinear market impact with neural-network approximation.</p>
+        <div class="chip-row"><span class="chip">stochastic control</span><span class="chip">HJB</span><span class="chip">neural nets</span></div>
+      </article>
+
+      <article class="card">
+        <div class="meta"><span>2026 · Python, NumPy, Pandas</span></div>
+        <h3><a href="https://github.com/maxwellhanks/Barra-style-multi-factor-equity-risk-model">Barra-style multi-factor equity risk model</a></h3>
+        <div class="metric-row">
+          <div class="metric"><div class="num"><span data-count="94">94</span></div><div class="lbl">stock universe</div></div>
+          <div class="metric"><div class="num"><span data-count="6">6</span></div><div class="lbl">style factors</div></div>
+        </div>
+        <p>Daily factor returns via cross-sectional WLS; EWMA/Newey–West factor covariance with PSD enforcement and shrunk specific risk. Euler risk decomposition and walk-forward volatility-forecast validation.</p>
+        <div class="chip-row"><span class="chip">factor models</span><span class="chip">covariance estimation</span><span class="chip">risk decomposition</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section class="section" id="about">
+  <div class="wrap">
+    <div class="about-copy">
+      <p class="eyebrow" data-animate>About</p>
+      <h2 data-animate>About myself</h2>
+      <div data-stagger>
+        <p>I’m studying a <strong>Bachelor of Mathematics at UQ</strong>, majoring in Mathematical Artificial Intelligence with a minor in Computer Science. My coursework centres on statistical machine learning, financial mathematics, programming, and optimisation.</p>
+        <p>Outside lectures I design and build projects that bridge <strong>data science, machine learning, and mathematical modelling</strong> — and I keep a running stack of maths journals and books on the go.</p>
+        <p>Aside from my studies in mathematics, I have a passion for music performance and composition, including playing piano and percussion in pit bands, symphony orchestras, and other ensembles!</p>
+
+        <h3 style="font-family:var(--font-display);font-size:1.05rem;margin:var(--s5) 0 var(--s3);">Education</h3>
+        <div class="entry">
+          <div class="top">
+            <div>
+              <h3>Bachelor of Mathematics</h3>
+              <p class="org">The University of Queensland — Mathematical AI major, CS minor</p>
+            </div>
+            <span class="when">2026 – 2027</span>
+          </div>
+          <div class="chip-row"><span class="chip">Algorithms &amp; Data Structures</span><span class="chip">Deep Learning</span><span class="chip">Object-Oriented Programming</span><span class="chip">Statistical Inference</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EXPERIENCE ============ -->
+<section class="section" id="experience">
+  <div class="wrap">
+    <p class="eyebrow" data-animate>Experience</p>
+    <h2 data-animate>Teaching the maths I love</h2>
+    <div class="timeline" data-stagger>
+      <div class="entry">
+        <div class="top">
+          <div>
+            <h3>Connect Presenter</h3>
+            <p class="org">Connect Education — Brisbane, QLD</p>
+          </div>
+          <span class="when">2026 – now</span>
+        </div>
+        <ul>
+          <li>Deliver targeted exam-preparation workshops, using IA/EA data to tailor content and close knowledge gaps.</li>
+          <li>Guide students through past exam questions to build exam technique aligned with QCAA criteria.</li>
+        </ul>
+      </div>
+      <div class="entry">
+        <div class="top">
+          <div>
+            <h3>Academic Tutor</h3>
+            <p class="org">Private · All Access Education · KIS Academics — hybrid</p>
+          </div>
+          <span class="when">2025 – now</span>
+        </div>
+        <ul>
+          <li>250+ hours tutoring high-school students across Australian curricula: study skills, exam prep, assignment planning.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SKILLS ============ -->
+<section class="section" id="skills">
+  <div class="wrap">
+    <p class="eyebrow" data-animate>Skills</p>
+    <h2 data-animate>Toolkit</h2>
+    <div class="skills-grid" data-stagger>
+      <div class="skill-group">
+        <h3>Languages</h3>
+        <div class="chip-row">
+          <span class="chip">Python</span><span class="chip">Java</span><span class="chip">C / C++</span><span class="chip">R</span><span class="chip">MATLAB</span><span class="chip">JavaScript</span><span class="chip">Lua</span><span class="chip">HTML/CSS</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Tools</h3>
+        <div class="chip-row">
+          <span class="chip">NumPy / Pandas</span><span class="chip">TensorFlow</span><span class="chip">JAX</span><span class="chip">Jupyter</span><span class="chip">Git / GitHub</span><span class="chip">LaTeX</span><span class="chip">Linux</span><span class="chip">Vim</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Focus areas</h3>
+        <div class="chip-row">
+          <span class="chip">statistical modelling</span><span class="chip">probability &amp; stochastics</span><span class="chip">optimisation</span><span class="chip">AI / ML</span><span class="chip">DSA</span><span class="chip">OOP</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ READING ============ -->
+<section class="section reading" id="reading">
+  <div class="wrap">
+    <p class="eyebrow" data-animate>Reading</p>
+    <h2 data-animate>The bookshelf</h2>
+    <p class="section-intro" data-animate>The current collection! Skim through it iPod-classic style.</p>
+    <div class="ipod" data-animate>
+      <div class="coverflow" id="coverflow" tabindex="0" role="region" aria-roledescription="Cover Flow carousel" aria-label="Books I’m currently reading. Use the left and right arrow keys to browse.">
+        <figure class="book" data-title="The Elements of Statistical Learning" data-author="Hastie, Tibshirani &amp; Friedman">
+          <div class="cover has-img c1"><img src="covers/esl.jpg" alt="Cover of The Elements of Statistical Learning by Hastie, Tibshirani and Friedman" loading="lazy"></div>
+        </figure>
+        <figure class="book" data-title="Stochastic Differential Equations" data-author="Øksendal">
+          <div class="cover has-img c1"><img src="covers/sde.jpg" alt="Cover of Stochastic Differential Equations by Øksendal" loading="lazy"></div>
+        </figure>
+        <figure class="book" data-title="Numerical Methods for Finance" data-author="Appleby, Edelman &amp; Miller">
+          <div class="cover has-img c2"><img src="covers/numfinance.jpg" alt="Cover of Numerical Methods for Finance edited by Appleby, Edelman and Miller" loading="lazy"></div>
+        </figure>
+        <figure class="book" data-title="Bayesian Inference in Statistical Analysis" data-author="Box &amp; Tiao">
+          <div class="cover has-img c2"><img src="covers/bayes.jpg" alt="Cover of Bayesian Inference in Statistical Analysis by Box and Tiao" loading="lazy"></div>
+        </figure>
+        <figure class="book" data-title="Reliability and Risk" data-author="Singpurwalla">
+          <div class="cover has-img c3"><img src="covers/reliability.jpg" alt="Cover of Reliability and Risk: A Bayesian Perspective by Singpurwalla" loading="lazy"></div>
+        </figure>
+        <figure class="book" data-title="Stochastic Dynamics" data-author="Crauel &amp; Gundlach">
+          <div class="cover has-img c5"><img src="covers/stochdyn.jpg" alt="Cover of Stochastic Dynamics edited by Crauel and Gundlach" loading="lazy"></div>
+        </figure>
+        <figure class="book" data-title="R for Data Science" data-author="Wickham &amp; Grolemund">
+          <div class="cover has-img c5"><img src="covers/r4ds.jpg" alt="Cover of R for Data Science by Wickham and Grolemund" loading="lazy"></div>
+        </figure>
+        <figure class="book" data-title="Measure Theory" data-author="Doob">
+          <div class="cover has-img c1"><img src="covers/measure.jpg" alt="Cover of Measure Theory by Doob" loading="lazy"></div>
+        </figure>
+        <figure class="book" data-title="Elementary Functional Analysis" data-author="MacCluer">
+          <div class="cover has-img c1"><img src="covers/efa.jpg" alt="Cover of Elementary Functional Analysis by MacCluer" loading="lazy"></div>
+        </figure>
+        <figure class="book" data-title="Numerical Techniques for Stochastic Optimization" data-author="Ermoliev &amp; Wets">
+          <div class="cover has-img c6"><img src="covers/stochopt.jpg" alt="Cover of Numerical Techniques for Stochastic Optimization edited by Ermoliev and Wets" loading="lazy"></div>
+        </figure>
+        <figure class="book" data-title="Algorithmic Number Theory" data-author="Adleman &amp; Huang (eds.)">
+          <div class="cover has-img c2"><img src="covers/ant.jpg" alt="Cover of Algorithmic Number Theory, ANTS-I proceedings, edited by Adleman and Huang" loading="lazy"></div>
+        </figure>
+        <figure class="book" data-title="Applied Partial Differential Equations" data-author="Haberman">
+          <div class="cover has-img c3"><img src="covers/pdes.jpg" alt="Cover of Applied Partial Differential Equations by Haberman" loading="lazy"></div>
+        </figure>
+        <figure class="book" data-title="An Advanced Course in Probability and Stochastic Processes" data-author="Kroese &amp; Botev">
+          <div class="cover has-img c3"><img src="covers/advprob.jpg" alt="Cover of An Advanced Course in Probability and Stochastic Processes by Kroese and Botev" loading="lazy"></div>
+        </figure>
+        <figure class="book" data-title="Data Science and Machine Learning" data-author="Kroese, Botev, Taimre &amp; Vaisman">
+          <div class="cover has-img c5"><img src="covers/dsml.jpg" alt="Cover of Data Science and Machine Learning: Mathematical and Statistical Methods by Kroese, Botev, Taimre and Vaisman" loading="lazy"></div>
+        </figure>
+      </div>
+      <p class="nowplaying" aria-live="polite">
+        <span class="np-title" id="npTitle"></span>
+        <span class="np-author" id="npAuthor"></span>
+        <span class="np-index" id="npIndex"></span>
+      </p>
+      <div class="flow-controls">
+        <button type="button" class="flow-btn" id="bookPrev" aria-label="Previous book">‹</button>
+        <button type="button" class="flow-btn" id="bookNext" aria-label="Next book">›</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MUSIC ============ -->
+<section class="section music" id="music">
+  <div class="wrap">
+    <p class="eyebrow" data-animate>Music</p>
+    <h2 data-animate>Off the clock, on the beat</h2>
+    <p class="section-intro" data-animate>Rehearsals are the other place I practise pattern recognition.</p>
+    <div class="music-grid" data-stagger>
+      <div class="entry">
+        <p class="role">Current ensemble</p>
+        <h3>Brisbane Philharmonic Orchestra</h3>
+        <p>Percussion, repertoire including Shostakovich 5 &amp; Khachaturian Masquerade!</p>
+      </div>
+      <div class="entry">
+        <p class="role">Current ensemble</p>
+        <h3>Queensland Youth Symphony</h3>
+        <p>Glockenspiel/Bells for Mahler 7! A long piece to say the least, but memorable!</p>
+      </div>
+      <div class="entry">
+        <p class="role">Current ensemble</p>
+        <h3>UQ Wind Symphony</h3>
+        <p>Never a quiet day in UQWS, from slapsticks to brake drums, my ears are always in for a treat!</p>
+      </div>
+    </div>
+    <div class="staff" data-animate aria-hidden="true">
+      <svg viewBox="0 0 560 28" preserveAspectRatio="none">
+        <line x1="0" y1="4"  x2="560" y2="4"/>
+        <line x1="0" y1="10" x2="560" y2="10"/>
+        <line x1="0" y1="16" x2="560" y2="16"/>
+        <line x1="0" y1="22" x2="560" y2="22"/>
+        <circle cx="80" cy="10" r="3"/><circle cx="200" cy="16" r="3"/><circle cx="330" cy="7" r="3"/><circle cx="470" cy="19" r="3"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-links">
+      <a href="mailto:hankslings@gmail.com">Email</a>
+      <a href="https://linkedin.com/in/maxwell-hanks">LinkedIn</a>
+      <a href="https://github.com/maxwellhanks">GitHub</a>
+    </div>
+    <p class="fine">© 2026 Maxwell Hanks · Brisbane, QLD</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduceMotion || !('IntersectionObserver' in window)) return;
+
+  /* ---- Scroll-triggered reveals ----
+     [data-animate]  -> element fades/rises on its own
+     [data-stagger]  -> each child fades/rises with an 80ms cascade */
+  var revealObserver = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) return;
+      var el = entry.target;
+      if (el.hasAttribute('data-stagger')) {
+        Array.prototype.forEach.call(el.children, function (child, i) {
+          child.style.setProperty('--d', (i * 0.08) + 's');
+          child.classList.add('in-view');
+        });
+      } else {
+        el.classList.add('in-view');
+      }
+      revealObserver.unobserve(el);
+    });
+  }, { threshold: 0, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('[data-animate],[data-stagger]').forEach(function (el) {
+    revealObserver.observe(el);
+  });
+
+  /* ---- Metric count-ups ----
+     <span data-count="161">161</span> counts 0 -> 161 when scrolled into view.
+     Decimals are preserved: data-count="6.25" counts 0.00 -> 6.25.
+     data-sep adds thousands separators (1,200). Static text remains if JS is off. */
+  var countObserver = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) return;
+      var el = entry.target;
+      countObserver.unobserve(el);
+
+      var raw = el.getAttribute('data-count');
+      var target = parseFloat(raw);
+      var decimals = raw.indexOf('.') === -1 ? 0 : raw.split('.')[1].length;
+      var useSep = el.hasAttribute('data-sep');
+      var duration = 1100;
+      var start = null;
+
+      function tick(ts) {
+        if (start === null) start = ts;
+        var p = Math.min((ts - start) / duration, 1);
+        var eased = 1 - Math.pow(1 - p, 3); /* easeOutCubic */
+        var value = target * eased;
+        var text = useSep
+          ? value.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })
+          : value.toFixed(decimals);
+        el.textContent = text;
+        if (p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    });
+  }, { threshold: 0.6 });
+
+  document.querySelectorAll('[data-count]').forEach(function (el) {
+    countObserver.observe(el);
+  });
+})();
+</script>
+
+<script>
+/* ---- iPod-classic Cover Flow (bookshelf) ----
+   Runs whether or not reduced-motion is set: with reduced motion the CSS
+   transition is absent, so covers reposition instantly instead of animating. */
+(function () {
+  var flow = document.getElementById('coverflow');
+  if (!flow) return;
+  var books = Array.prototype.slice.call(flow.querySelectorAll('.book'));
+  if (!books.length) return;
+
+  var npTitle = document.getElementById('npTitle');
+  var npAuthor = document.getElementById('npAuthor');
+  var npIndex = document.getElementById('npIndex');
+  var current = Math.floor(books.length / 2);
+
+  function layout() {
+    var w = books[0].firstElementChild.offsetWidth || 150;
+    var gap = Math.round(w * 0.42);   /* spacing between side covers */
+    var first = Math.round(w * 0.95); /* distance of first side cover from centre */
+    var pop = Math.round(w * 0.8);    /* how far the centre cover comes forward */
+
+    books.forEach(function (b, i) {
+      var o = i - current;
+      var a = Math.abs(o);
+      var s = o < 0 ? -1 : 1;
+      b.style.transform = (o === 0)
+        ? 'translate(-50%,-50%) translateZ(' + pop + 'px)'
+        : 'translate(-50%,-50%) translateX(' + (s * (first + (a - 1) * gap)) + 'px) rotateY(' + (-s * 55) + 'deg)';
+      b.style.zIndex = String(100 - a);
+      b.style.opacity = a > 5 ? '0' : '1';
+      b.style.pointerEvents = a > 5 ? 'none' : '';
+    });
+
+    var d = books[current].dataset;
+    npTitle.textContent = d.title;
+    npAuthor.textContent = d.author;
+    npIndex.textContent = (current + 1) + ' / ' + books.length;
+  }
+
+  function go(i) {
+    current = Math.max(0, Math.min(books.length - 1, i));
+    layout();
+  }
+
+  books.forEach(function (b, i) {
+    b.addEventListener('click', function () { go(i); });
+  });
+  document.getElementById('bookPrev').addEventListener('click', function () { go(current - 1); });
+  document.getElementById('bookNext').addEventListener('click', function () { go(current + 1); });
+
+  flow.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft') { e.preventDefault(); go(current - 1); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); go(current + 1); }
+  });
+
+  var startX = null;
+  flow.addEventListener('pointerdown', function (e) { startX = e.clientX; });
+  flow.addEventListener('pointerup', function (e) {
+    if (startX === null) return;
+    var dx = e.clientX - startX;
+    startX = null;
+    if (dx > 40) go(current - 1);
+    else if (dx < -40) go(current + 1);
+  });
+
+  window.addEventListener('resize', layout);
+  layout();
+})();
+</script>
+
+</body>
+</html>
