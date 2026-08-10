@@ -460,8 +460,8 @@ section[id],#top{scroll-margin-top:4.5rem;} /* anchors clear the sticky header *
 <section class="scan-strip" aria-label="Highlights">
   <div class="wrap" data-stagger>
     <div class="stat">
-      <div class="num"><span data-count="161">161</span> / 394</div>
-      <div class="lbl">Susquehanna Algothon ’26 — market-neutral stat-arb strategy</div>
+      <div class="num"><span data-count="3">3</span> / 124</div>
+      <div class="lbl">IMC Trading AlgoJam ’26 — market-neutral stat-arb strategy</div>
     </div>
     <div class="stat">
       <div class="num"><span data-count="6.25" data-sep>6.25</span> / 7.00</div>
@@ -479,21 +479,30 @@ section[id],#top{scroll-margin-top:4.5rem;} /* anchors clear the sticky header *
   <div class="wrap">
     <p class="eyebrow" data-animate>Projects</p>
     <h2 data-animate>Selected work</h2>
-    <p class="section-intro" data-animate>Three quantitative projects, each validated out-of-sample. Code on <a href="https://github.com/maxwellhanks">GitHub</a>.</p>
-
+    <p class="section-intro" data-animate>Four quantitative projects, each validated out-of-sample. Code on <a href="https://github.com/maxwellhanks">GitHub</a>.</p>
     <div class="bento" data-stagger>
       <article class="card span-2">
         <div class="meta"><span>2026 · Python</span><span>statistical arbitrage</span></div>
-        <h3><a href="https://github.com/maxwellhanks/Susquehanna-Algothon-26-Strategy">Susquehanna Algothon ’26 — market-neutral stat-arb</a></h3>
+        <h3><a href="https://github.com/maxwellhanks/Susquehanna-Algothon-26-Strategy">Susquehanna Algothon ’26 — adaptive multi-model time-series trading</a></h3>
         <div class="metric-row">
-          <div class="metric"><div class="num"><span data-count="161">161</span>/394</div><div class="lbl">final placing</div></div>
-          <div class="metric"><div class="num"><span data-count="51">51</span></div><div class="lbl">instruments traded</div></div>
-          <div class="metric"><div class="num">OU</div><div class="lbl">spread dynamics</div></div>
+          <div class="metric"><div class="num"><span data-count="3">3</span>/124</div><div class="lbl">final placing</div></div>
+          <div class="metric"><div class="num"><span data-count="9">9</span></div><div class="lbl">instruments traded</div></div>
+          <div class="metric"><div class="num">ETS</div><div class="lbl">framework</div></div>
         </div>
         <p>Selected cointegrated pairs offline via Engle–Granger and ADF stationarity testing, modelled mean-reverting spreads as Ornstein–Uhlenbeck processes, and hedged residual exposure against the index. Volatility-scaled sizing; validated by walk-forward backtesting on unseen data.</p>
         <div class="chip-row"><span class="chip">cointegration</span><span class="chip">ADF / Engle–Granger</span><span class="chip">walk-forward</span><span class="chip">vol targeting</span></div>
       </article>
-
+      <article class="card">
+        <div class="meta"><span>2026 · Python</span><span>regime-adaptive forecasting</span></div>
+        <h3><a href="https://github.com/maxwellhanks/AlgoJam-3-Strategy">UQ FinTech AlgoJam 3 — regime-adaptive multi-strategy forecasting</a></h3>
+        <div class="metric-row">
+          <div class="metric"><div class="num"><span data-count="3">3</span>/124</div><div class="lbl">final placing</div></div>
+          <div class="metric"><div class="num"><span data-count="9">9</span></div><div class="lbl">instruments traded</div></div>
+          <div class="metric"><div class="num">ETS</div><div class="lbl">framework</div></div>
+        </div>
+        <p>Designed instrument-specific time-series models spanning peg mean-reversion, Holt's ETS trend-following, volatility-gated regime-switching, and seasonal decomposition against a fitted annual cycle. All positions routed through a budget-constrained sizer with priority-ranked trimming.</p>
+        <div class="chip-row"><span class="chip">Holt's ETS</span><span class="chip">regime-switching</span><span class="chip">seasonal decomposition</span><span class="chip">minority game</span></div>
+      </article>
       <article class="card">
         <div class="meta"><span>2026 · Python, MATLAB</span></div>
         <h3><a href="https://github.com/maxwellhanks">Optimal execution via HJB &amp; neural networks</a></h3>
@@ -503,7 +512,6 @@ section[id],#top{scroll-margin-top:4.5rem;} /* anchors clear the sticky header *
         <p>Formulated liquidation as continuous-time stochastic control, solved the linear-quadratic benchmark analytically, and extended to nonlinear market impact with neural-network approximation. (Still a work in progress :D)</p>
         <div class="chip-row"><span class="chip">stochastic control</span><span class="chip">HJB</span><span class="chip">neural nets</span></div>
       </article>
-
       <article class="card">
         <div class="meta"><span>2026 · Python, NumPy, Pandas</span></div>
         <h3><a href="https://github.com/maxwellhanks/Barra-style-multi-factor-equity-risk-model">Barra-style multi-factor equity risk model</a></h3>
