@@ -129,7 +129,7 @@ a:hover{text-decoration:underline;text-underline-offset:3px;}
 .btn-primary{background:var(--accent);border-color:var(--accent);color:#16130f;}
 .btn-primary:hover{background:#e0c293;border-color:#e0c493;}
 
-/* Signature: mean-reverting spread chart */
+/* Signature: Monte Carlo random-walk simulation */
 .spread-card{
   background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
   padding:var(--s4) var(--s4) var(--s3);
@@ -137,23 +137,23 @@ a:hover{text-decoration:underline;text-underline-offset:3px;}
 .spread-card figcaption{
   font-family:var(--font-mono);font-size:.72rem;color:var(--muted);
   display:flex;justify-content:space-between;gap:var(--s3);
-  margin-top:var(--s2);flex-wrap:wrap;
+  margin-top:var(--s2);flex-wrap:wrap;align-items:center;
 }
 .spread-card svg{width:100%;height:auto;display:block;}
-.spread-path{
-  stroke:var(--accent);stroke-width:2;fill:none;
+.mc-path{
+  stroke:var(--accent);stroke-width:1.6;fill:none;opacity:.45;
   stroke-linecap:round;stroke-linejoin:round;
 }
-@media (prefers-reduced-motion:no-preference){
-  .spread-path{
-    stroke-dasharray:1400;stroke-dashoffset:1400;
-    animation:draw 2.4s ease-out .9s forwards;
-  }
-  @keyframes draw{to{stroke-dashoffset:0;}}
+.mc-path.hi{stroke:var(--brass);stroke-width:2;opacity:1;}
+.mc-env{stroke:var(--line);stroke-width:1;stroke-dasharray:2 5;fill:none;}
+.mc-mean{stroke:var(--muted);stroke-width:1;stroke-dasharray:6 6;}
+.mc-label{font-family:var(--font-mono);font-size:11px;fill:var(--muted);}
+.mc-resample{
+  font-family:var(--font-mono);font-size:.72rem;color:var(--muted);
+  background:none;border:0;padding:0;cursor:pointer;
 }
-.spread-mean{stroke:var(--muted);stroke-width:1;stroke-dasharray:6 6;}
-.spread-band{stroke:var(--line);stroke-width:1;stroke-dasharray:2 5;}
-.spread-label{font-family:var(--font-mono);font-size:11px;fill:var(--muted);}
+.mc-resample:hover{color:var(--accent);}
+html:not(.js) .mc-resample{display:none;}
 
 /* Scan strip */
 .scan-strip{border-bottom:1px solid var(--line);background:var(--surface);}
@@ -438,19 +438,21 @@ section[id],#top{scroll-margin-top:4.5rem;} /* anchors clear the sticky header *
       </div>
     </div>
 
-    <figure class="spread-card" data-reveal style="--i:3" role="img" aria-label="Chart of a mean-reverting spread oscillating around its long-run mean between two-sigma bands">
-      <svg viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <line class="spread-band" x1="0" y1="55"  x2="516" y2="55"/>
-        <line class="spread-mean" x1="0" y1="105" x2="516" y2="105"/>
-        <line class="spread-band" x1="0" y1="155" x2="516" y2="155"/>
-        <text class="spread-label" x="524" y="59">+2σ</text>
-        <text class="spread-label" x="524" y="109">μ</text>
-        <text class="spread-label" x="524" y="159">−2σ</text>
-        <path class="spread-path" d="M0,105 C14,84 26,66 40,72 C54,78 62,118 78,128 C94,138 104,96 118,84 C132,72 142,60 156,70 C170,80 180,120 196,132 C212,144 224,110 238,98 C252,86 262,74 278,80 C294,86 304,124 318,134 C332,144 344,104 358,90 C372,76 384,64 398,74 C412,84 422,116 438,126 C454,136 466,100 480,92 C494,84 506,98 516,105"/>
+    <figure class="spread-card" data-reveal style="--i:3" role="img" aria-label="Monte Carlo simulation: five simulated random-walk paths diverging from a common starting value inside a two-sigma root-t envelope">
+      <svg id="mcChart" viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <line class="mc-mean" x1="0" y1="105" x2="516" y2="105"/>
+        <path class="mc-env" d="M0,105 L21.5,92.7 L43,87.7 L86,80.5 L129,75 L193.5,68.2 L258,62.6 L344,56 L430,50.2 L516,45"/>
+        <path class="mc-env" d="M0,105 L21.5,117.3 L43,122.3 L86,129.5 L129,135 L193.5,141.8 L258,147.4 L344,154 L430,159.8 L516,165"/>
+        <text class="mc-label" x="524" y="49">+2σ</text>
+        <text class="mc-label" x="524" y="109">S₀</text>
+        <text class="mc-label" x="524" y="169">−2σ</text>
+        <g id="mcPaths">
+          <path class="mc-path hi" d="M0,105 L26,98 L52,112 L77,101 L103,88 L129,95 L155,80 L181,86 L206,72 L232,83 L258,70 L284,61 L310,74 L335,66 L361,55 L387,68 L413,58 L439,49 L464,62 L490,54 L516,45"/>
+        </g>
       </svg>
       <figcaption>
-        <span>ou_spread · pair #7</span>
-        <span>half-life ≈ 4.2d</span>
+        <span>monte_carlo · 5 paths · 120 steps</span>
+        <button type="button" id="mcResample" class="mc-resample">↻ resample</button>
       </figcaption>
     </figure>
   </div>
@@ -791,6 +793,59 @@ section[id],#top{scroll-margin-top:4.5rem;} /* anchors clear the sticky header *
   document.querySelectorAll('[data-count]').forEach(function (el) {
     countObserver.observe(el);
   });
+})();
+</script>
+
+<script>
+/* ---- Hero: Monte Carlo random-walk simulation ----
+   Draws PATHS independent Gaussian random walks from a common S0.
+   The static path in #mcPaths is the no-JS fallback and is replaced here.
+   SIGMA is tuned so the terminal spread sits near the ±2σ√t envelope. */
+(function () {
+  var svg = document.getElementById('mcChart');
+  if (!svg) return;
+  var NS = 'http://www.w3.org/2000/svg';
+  var STEPS = 120, PATHS = 5, W = 516, Y0 = 105, SIGMA = 2.74;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function gauss() {              /* Box–Muller */
+    var u = 0, v = 0;
+    while (u === 0) u = Math.random();
+    while (v === 0) v = Math.random();
+    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  }
+
+  function walk() {
+    var y = Y0, d = 'M0,' + Y0;
+    for (var i = 1; i <= STEPS; i++) {
+      y = Math.max(12, Math.min(198, y + SIGMA * gauss()));
+      d += ' L' + (i * W / STEPS).toFixed(1) + ',' + y.toFixed(1);
+    }
+    return d;
+  }
+
+  function run() {
+    var g = document.getElementById('mcPaths');
+    g.textContent = '';
+    for (var p = 0; p < PATHS; p++) {
+      var el = document.createElementNS(NS, 'path');
+      el.setAttribute('class', 'mc-path' + (p === PATHS - 1 ? ' hi' : ''));
+      el.setAttribute('d', walk());
+      g.appendChild(el);
+      if (!reduce) {
+        var len = el.getTotalLength();
+        el.style.strokeDasharray = len;
+        el.style.strokeDashoffset = len;
+        el.style.transition = 'stroke-dashoffset 2.2s ease-out ' + (0.5 + p * 0.12) + 's';
+        el.getBoundingClientRect();   /* force reflow so the transition fires */
+        el.style.strokeDashoffset = '0';
+      }
+    }
+  }
+
+  run();
+  var btn = document.getElementById('mcResample');
+  if (btn) btn.addEventListener('click', run);
 })();
 </script>
 
