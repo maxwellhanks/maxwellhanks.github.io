@@ -156,11 +156,6 @@ html:not(.js) .theme-toggle{display:none;}
 
 /* ============ Hero ============ */
 .hero{padding-block:var(--s7) var(--s6);border-bottom:1px solid var(--line);}
-.hero-grid{display:grid;gap:var(--s6);}
-.hero-grid>*{min-width:0;}
-@media(min-width:56rem){
-  .hero-grid{grid-template-columns:1.05fr .95fr;align-items:center;}
-}
 .hero-id{display:flex;align-items:center;gap:var(--s4);margin-bottom:var(--s5);}
 .avatar{
   width:72px;height:72px;border-radius:50%;
@@ -184,7 +179,6 @@ html:not(.js) .theme-toggle{display:none;}
 }
 .hero h1 .accent{color:var(--accent);}
 .hero .lede{
-  color:var(--muted);font-size:1.06rem;max-width:34rem;margin-bottom:var(--s5);
   color:var(--muted);font-size:1.06rem;margin-bottom:var(--s5);
 }
 .hero .lede strong{color:var(--text);font-weight:500;}
@@ -198,22 +192,6 @@ html:not(.js) .theme-toggle{display:none;}
 .btn:hover{text-decoration:none;border-color:var(--muted);}
 .btn-primary{background:var(--accent);border-color:var(--accent);color:var(--button-text);}
 .btn-primary:hover{background:var(--accent-hover);border-color:var(--accent-hover);}
-
-/* Signature: measure-theoretic integration (LaTeX + offline MathML). */
-.equation-card{
-  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
-  padding:var(--s6) var(--s5);min-width:0;
-  display:flex;flex-direction:column;justify-content:center;gap:var(--s5);
-  min-height:220px;
-}
-.equation-card figcaption{
-  font-family:var(--font-mono);font-size:.72rem;color:var(--muted);
-  text-align:center;letter-spacing:.08em;text-transform:uppercase;
-}
-.equation{color:var(--accent);text-align:center;min-width:0;}
-.equation-content{display:inline-block;width:max-content;font-size:clamp(.95rem,1.45vw,1.15rem);}
-.equation math{font-size:1.2em;}
-.equation mjx-container[jax="CHTML"][display="true"]{margin:0;}
 
 /* Scan strip */
 .scan-strip{border-bottom:1px solid var(--line);background:var(--surface);}
@@ -244,19 +222,10 @@ html:not(.js) .theme-toggle{display:none;}
 /* Projects: one independent article per row; duplicate an article to add more. */
 .project-list{display:grid;border-top:1px solid var(--line);}
 .project-row{
-  display:grid;grid-template-columns:11.5rem minmax(0,1fr) 1.5rem;
   display:grid;grid-template-columns:minmax(0,1fr) 1.5rem;
   gap:var(--s6);padding-block:var(--s6);border-bottom:1px solid var(--line);
   align-items:start;
 }
-.project-art{
-  aspect-ratio:1.45;display:grid;place-items:center;
-  border:1px solid var(--line);border-radius:8px;background:var(--surface);
-  color:var(--accent);overflow:hidden;
-}
-.project-art svg{display:block;width:100%;height:auto;}
-.project-art .grid-line{stroke:var(--line);stroke-width:1;}
-.project-art .secondary{stroke:var(--brass);}
 .project-body{display:flex;flex-direction:column;gap:var(--s3);min-width:0;}
 .project-row .meta{
   font-family:var(--font-mono);font-size:.74rem;color:var(--muted);
@@ -281,7 +250,6 @@ html:not(.js) .theme-toggle{display:none;}
 }
 @media(max-width:47.99rem){
   .project-row{grid-template-columns:minmax(0,1fr) 1.5rem;gap:var(--s4);}
-  .project-art{grid-column:1 / -1;width:100%;max-width:18rem;}
 }
 
 /* About */
@@ -495,7 +463,6 @@ html.js .book{
 
 <!-- ============ HERO ============ -->
 <section class="hero" id="top">
-  <div class="wrap hero-grid">
   <div class="wrap">
     <div>
       <div class="hero-id" data-reveal style="--i:0">
@@ -511,25 +478,6 @@ html.js .book{
       </div>
     </div>
 
-    <figure class="equation-card" data-reveal style="--i:3">
-      <figcaption>Measure &amp; integration</figcaption>
-      <!-- Edit data-latex to change the equation rendered by MathJax.
-           The native MathML below keeps this equation visible offline. -->
-      <div class="equation" id="heroEquation" data-latex="\int_\Omega f\,\mathrm{d}\mu = \int_\Omega f(\omega)\,\mathrm{d}\mu(\omega)">
-        <div class="equation-content" id="equationContent">
-          <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
-            <semantics>
-              <mrow>
-                <msub><mo largeop="true">∫</mo><mi>Ω</mi></msub><mi>f</mi><mspace width="0.167em"/><mi mathvariant="normal">d</mi><mi>μ</mi>
-                <mo>=</mo>
-                <msub><mo largeop="true">∫</mo><mi>Ω</mi></msub><mi>f</mi><mo>(</mo><mi>ω</mi><mo>)</mo><mspace width="0.167em"/><mi mathvariant="normal">d</mi><mi>μ</mi><mo>(</mo><mi>ω</mi><mo>)</mo>
-              </mrow>
-              <annotation encoding="application/x-tex">\int_\Omega f\,\mathrm{d}\mu = \int_\Omega f(\omega)\,\mathrm{d}\mu(\omega)</annotation>
-            </semantics>
-          </math>
-        </div>
-      </div>
-    </figure>
   </div>
 </section>
 
@@ -560,10 +508,6 @@ html.js .book{
     <!-- Add a project by copying one complete project-row article below. -->
     <div class="project-list">
       <article class="project-row" data-animate>
-        <!-- Optional: replace this decorative diagram with an img of your project. -->
-        <div class="project-art" aria-hidden="true">
-          <svg viewBox="0 0 220 145" fill="none"><path class="grid-line" d="M22 26H198M22 56H198M22 86H198M22 116H198M22 20V124M66 20V124M110 20V124M154 20V124M198 20V124"/><path d="M22 99L37 93L51 101L66 78L81 84L95 62L110 74L125 58L140 66L154 40L169 49L183 33L198 26" fill="none" stroke="currentColor" stroke-width="2.5"/><path class="secondary" d="M22 101C60 91 63 90 94 76S156 50 198 31" fill="none" stroke-width="1.5" stroke-dasharray="4 4"/></svg>
-        </div>
         <div class="project-body">
         <div class="meta"><span>2026 · Python</span><span>regime-adaptive forecasting</span></div>
         <h3><a href="https://github.com/maxwellhanks/AlgoJam-3-Strategy">IMC x UQ FinTech AlgoJam 3 - regime-adaptive multi-strategy forecasting</a></h3>
@@ -579,10 +523,6 @@ html.js .book{
         <a class="project-link" href="https://github.com/maxwellhanks/AlgoJam-3-Strategy" aria-label="View IMC x UQ FinTech AlgoJam 3 - regime-adaptive multi-strategy forecasting" tabindex="-1"><span aria-hidden="true">↗</span></a>
       </article>
       <article class="project-row" data-animate>
-        <!-- Optional: replace this decorative diagram with an img of your project. -->
-        <div class="project-art" aria-hidden="true">
-          <svg viewBox="0 0 220 145" fill="none"><path class="grid-line" d="M22 35H198M22 75H198M22 115H198"/><path d="M22 77L37 55L51 39L66 51L81 83L95 101L110 96L125 70L140 45L154 51L169 81L183 92L198 72" fill="none" stroke="currentColor" stroke-width="2.5"/><path class="secondary" d="M22 67L37 76L51 86L66 77L81 61L95 52L110 57L125 77L140 91L154 85L169 64L183 54L198 70" fill="none" stroke-width="2"/></svg>
-        </div>
         <div class="project-body">
         <div class="meta"><span>2026 · Python</span><span>statistical arbitrage</span></div>
         <h3><a href="https://github.com/maxwellhanks/Susquehanna-Algothon-26-Strategy">Susquehanna Algothon ’26 - adaptive multi-model time-series trading</a></h3>
@@ -598,10 +538,6 @@ html.js .book{
         <a class="project-link" href="https://github.com/maxwellhanks/Susquehanna-Algothon-26-Strategy" aria-label="View Susquehanna Algothon ’26 - adaptive multi-model time-series trading" tabindex="-1"><span aria-hidden="true">↗</span></a>
       </article>
       <article class="project-row" data-animate>
-        <!-- Optional: replace this decorative diagram with an img of your project. -->
-        <div class="project-art" aria-hidden="true">
-          <svg viewBox="0 0 220 145" fill="none"><path class="grid-line" d="M24 24V122H198M24 48H198M24 84H198"/><path d="M24 30C66 36 64 69 101 82S159 100 198 113" fill="none" stroke="currentColor" stroke-width="2.5"/><path class="secondary" d="M24 30L68 50L111 73L155 95L198 113" fill="none" stroke-width="1.5" stroke-dasharray="4 4"/></svg>
-        </div>
         <div class="project-body">
         <div class="meta"><span>2026 · Python, MATLAB</span></div>
         <h3><a href="https://github.com/maxwellhanks">Optimal execution via HJB &amp; neural networks</a></h3>
@@ -615,10 +551,6 @@ html.js .book{
         <a class="project-link" href="https://github.com/maxwellhanks" aria-label="View Optimal execution via HJB &amp; neural networks" tabindex="-1"><span aria-hidden="true">↗</span></a>
       </article>
       <article class="project-row" data-animate>
-        <!-- Optional: replace this decorative diagram with an img of your project. -->
-        <div class="project-art" aria-hidden="true">
-          <svg viewBox="0 0 220 145" fill="none"><rect x="36" y="20" width="26" height="19" rx="2" fill="currentColor" opacity="0.9"/><rect x="67" y="20" width="26" height="19" rx="2" fill="currentColor" opacity="0.27"/><rect x="98" y="20" width="26" height="19" rx="2" fill="currentColor" opacity="0.39"/><rect x="129" y="20" width="26" height="19" rx="2" fill="currentColor" opacity="0.51"/><rect x="160" y="20" width="26" height="19" rx="2" fill="currentColor" opacity="0.15"/><rect x="36" y="44" width="26" height="19" rx="2" fill="currentColor" opacity="0.27"/><rect x="67" y="44" width="26" height="19" rx="2" fill="currentColor" opacity="0.9"/><rect x="98" y="44" width="26" height="19" rx="2" fill="currentColor" opacity="0.51"/><rect x="129" y="44" width="26" height="19" rx="2" fill="currentColor" opacity="0.15"/><rect x="160" y="44" width="26" height="19" rx="2" fill="currentColor" opacity="0.27"/><rect x="36" y="68" width="26" height="19" rx="2" fill="currentColor" opacity="0.39"/><rect x="67" y="68" width="26" height="19" rx="2" fill="currentColor" opacity="0.51"/><rect x="98" y="68" width="26" height="19" rx="2" fill="currentColor" opacity="0.9"/><rect x="129" y="68" width="26" height="19" rx="2" fill="currentColor" opacity="0.27"/><rect x="160" y="68" width="26" height="19" rx="2" fill="currentColor" opacity="0.39"/><rect x="36" y="92" width="26" height="19" rx="2" fill="currentColor" opacity="0.51"/><rect x="67" y="92" width="26" height="19" rx="2" fill="currentColor" opacity="0.15"/><rect x="98" y="92" width="26" height="19" rx="2" fill="currentColor" opacity="0.27"/><rect x="129" y="92" width="26" height="19" rx="2" fill="currentColor" opacity="0.9"/><rect x="160" y="92" width="26" height="19" rx="2" fill="currentColor" opacity="0.51"/><rect x="36" y="116" width="26" height="19" rx="2" fill="currentColor" opacity="0.15"/><rect x="67" y="116" width="26" height="19" rx="2" fill="currentColor" opacity="0.27"/><rect x="98" y="116" width="26" height="19" rx="2" fill="currentColor" opacity="0.39"/><rect x="129" y="116" width="26" height="19" rx="2" fill="currentColor" opacity="0.51"/><rect x="160" y="116" width="26" height="19" rx="2" fill="currentColor" opacity="0.9"/></svg>
-        </div>
         <div class="project-body">
         <div class="meta"><span>2026 · Python, NumPy, Pandas</span></div>
         <h3><a href="https://github.com/maxwellhanks/Barra-style-multi-factor-equity-risk-model">Barra-style multi-factor equity risk model</a></h3>
@@ -993,39 +925,7 @@ html.js .book{
   syncButton();
 })();
 
-/* Fit the complete equation without clipping at small viewport widths. */
-function fitHeroEquation() {
-  var box = document.getElementById('heroEquation');
-  var content = document.getElementById('equationContent');
-  if (!box || !content) return;
-  content.style.fontSize = '';
-  var width = content.getBoundingClientRect().width;
-  if (width > box.clientWidth && box.clientWidth > 0) {
-    var size = parseFloat(window.getComputedStyle(content).fontSize);
-    content.style.fontSize = (size * box.clientWidth / width * 0.98) + 'px';
-  }
-}
-window.addEventListener('resize', fitHeroEquation);
-fitHeroEquation();
-if (document.fonts) document.fonts.ready.then(fitHeroEquation);
-
-/* MathJax renders the editable LaTeX when online; native MathML remains offline. */
-window.MathJax = {
-  startup: {
-    typeset: false,
-    pageReady: function () {
-      var box = document.getElementById('heroEquation');
-      return MathJax.tex2chtmlPromise(box.dataset.latex, {display: true})
-        .then(function (node) {
-          document.getElementById('equationContent').replaceChildren(node);
-          fitHeroEquation();
-        })
-        .catch(function () { /* Preserve the native fallback if loading fails. */ });
-    }
-  }
-};
 </script>
-<script defer src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"></script>
 
 </body>
 </html>
