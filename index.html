@@ -8,10 +8,23 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script>document.documentElement.classList.add('js');</script>
+<script>
+/* Apply the saved theme before painting the page. Dark is the initial theme. */
+(function () {
+  var root = document.documentElement;
+  root.classList.add('js');
+  var theme = 'dark';
+  try {
+    var saved = localStorage.getItem('maxwell-portfolio-theme');
+    if (saved === 'light' || saved === 'dark') theme = saved;
+  } catch (e) { /* Local file privacy settings may disable storage. */ }
+  root.dataset.theme = theme;
+})();
+</script>
 <style>
 /* ============ Tokens ============ */
 :root{
+  color-scheme:dark;
   --bg:#111110;          /* warm charcoal-olive */
   --surface:#24231d;
   --surface-2:#2d2b24;
@@ -20,6 +33,12 @@
   --muted:#aaa496;
   --accent:#dbbe70;      /* soft moss green */
   --brass:#e6af7b;       /* warm amber — the human notes */
+  --button-text:#16130f;
+  --accent-hover:#e0c293;
+  --reading-top:#0c0a08;
+  --reading-bottom:#1b170f;
+  --hover-border:#5c5138;
+  --shadow:rgba(0,0,0,.35);
   --font-display:"Bricolage Grotesque",system-ui,sans-serif;
   --font-body:"Figtree",system-ui,sans-serif;
   --font-mono:"JetBrains Mono",ui-monospace,monospace;
@@ -28,6 +47,24 @@
   --s5:1.5rem; --s6:2.5rem; --s7:4rem; --s8:6rem;
   --radius:14px;
   --maxw:70rem;
+}
+/* Light palette keeps the same warm paper / brass character. */
+:root[data-theme="light"]{
+  color-scheme:light;
+  --bg:#faf8f2;
+  --surface:#f0ede4;
+  --surface-2:#e8e3d7;
+  --line:#d4cebf;
+  --text:#24231d;
+  --muted:#625e53;
+  --accent:#80601f;
+  --brass:#875229;
+  --button-text:#ffffff;
+  --accent-hover:#6a4e17;
+  --reading-top:#f6f3eb;
+  --reading-bottom:#eae4d7;
+  --hover-border:#aaa18b;
+  --shadow:rgba(70,58,31,.12);
 }
 @media (prefers-reduced-motion:no-preference){
   html{scroll-behavior:smooth;}
@@ -69,7 +106,9 @@ a:hover{text-decoration:underline;text-underline-offset:3px;}
 }
 .site-nav {
   margin-left: auto;
+  min-width:0;
   overflow-x: auto;
+  overflow-y:hidden;
   scrollbar-width: none; /* Firefox */
 }
 
@@ -81,7 +120,6 @@ a:hover{text-decoration:underline;text-underline-offset:3px;}
   color:var(--text);letter-spacing:.02em;white-space:nowrap;
 }
 .logo em{color:var(--accent);font-style:normal;}
-.site-nav{margin-left:auto;overflow-x:auto;}
 .site-nav ul{
   display:flex;gap:var(--s3);list-style:none;align-items:center;
 }
@@ -90,16 +128,38 @@ a:hover{text-decoration:underline;text-underline-offset:3px;}
   padding:var(--s1) 0;
 }
 .site-nav a:hover{color:var(--text);text-decoration:none;}
-.nav-icons{display:flex;gap:var(--s3);align-items:center;margin-left:var(--s2);}
+.nav-icons{display:flex;flex-shrink:0;gap:var(--s3);align-items:center;margin-left:var(--s2);}
 .nav-icons a{color:var(--muted);display:inline-flex;}
 .nav-icons a:hover{color:var(--accent);}
 .nav-icons svg{width:19px;height:19px;fill:currentColor;}
 
+.theme-toggle{
+  display:inline-grid;place-items:center;flex-shrink:0;
+  width:36px;height:36px;border:1px solid var(--line);border-radius:8px;
+  background:var(--surface);color:var(--muted);cursor:pointer;
+}
+.theme-toggle:hover{color:var(--accent);border-color:var(--accent);}
+.theme-toggle svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+html:not(.js) .theme-toggle{display:none;}
+@media(max-width:55.99rem){
+  .site-header .wrap{flex-wrap:wrap;gap:var(--s2) var(--s4);}
+  .nav-icons{margin-left:auto;}
+  .site-nav{order:3;flex:1 1 100%;margin-left:0;}
+  .site-nav ul{justify-content:center;gap:clamp(.65rem,3vw,1.5rem);}
+  section[id],#top{scroll-margin-top:7rem;}
+}
+@media(max-width:23rem){
+  .logo{font-size:.8rem;}
+  .nav-icons{gap:var(--s2);}
+  .site-nav ul{justify-content:flex-start;}
+}
+
 /* ============ Hero ============ */
 .hero{padding-block:var(--s7) var(--s6);border-bottom:1px solid var(--line);}
 .hero-grid{display:grid;gap:var(--s6);}
+.hero-grid>*{min-width:0;}
 @media(min-width:56rem){
-  .hero-grid{grid-template-columns:1.15fr .85fr;align-items:center;}
+  .hero-grid{grid-template-columns:1.05fr .95fr;align-items:center;}
 }
 .hero-id{display:flex;align-items:center;gap:var(--s4);margin-bottom:var(--s5);}
 .avatar{
@@ -125,6 +185,7 @@ a:hover{text-decoration:underline;text-underline-offset:3px;}
 .hero h1 .accent{color:var(--accent);}
 .hero .lede{
   color:var(--muted);font-size:1.06rem;max-width:34rem;margin-bottom:var(--s5);
+  color:var(--muted);font-size:1.06rem;margin-bottom:var(--s5);
 }
 .hero .lede strong{color:var(--text);font-weight:500;}
 .cta-row{display:flex;flex-wrap:wrap;gap:var(--s3);}
@@ -135,34 +196,24 @@ a:hover{text-decoration:underline;text-underline-offset:3px;}
   border:1px solid var(--line);color:var(--text);
 }
 .btn:hover{text-decoration:none;border-color:var(--muted);}
-.btn-primary{background:var(--accent);border-color:var(--accent);color:#16130f;}
-.btn-primary:hover{background:#e0c293;border-color:#e0c493;}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:var(--button-text);}
+.btn-primary:hover{background:var(--accent-hover);border-color:var(--accent-hover);}
 
-/* Signature: Monte Carlo random-walk simulation */
-.spread-card{
+/* Signature: measure-theoretic integration (LaTeX + offline MathML). */
+.equation-card{
   background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
-  padding:var(--s4) var(--s4) var(--s3);
+  padding:var(--s6) var(--s5);min-width:0;
+  display:flex;flex-direction:column;justify-content:center;gap:var(--s5);
+  min-height:220px;
 }
-.spread-card figcaption{
+.equation-card figcaption{
   font-family:var(--font-mono);font-size:.72rem;color:var(--muted);
-  display:flex;justify-content:space-between;gap:var(--s3);
-  margin-top:var(--s2);flex-wrap:wrap;align-items:center;
+  text-align:center;letter-spacing:.08em;text-transform:uppercase;
 }
-.spread-card svg{width:100%;height:auto;display:block;}
-.mc-path{
-  stroke:var(--accent);stroke-width:1.6;fill:none;opacity:.45;
-  stroke-linecap:round;stroke-linejoin:round;
-}
-.mc-path.hi{stroke:var(--brass);stroke-width:2;opacity:1;}
-.mc-env{stroke:var(--line);stroke-width:1;stroke-dasharray:2 5;fill:none;}
-.mc-mean{stroke:var(--muted);stroke-width:1;stroke-dasharray:6 6;}
-.mc-label{font-family:var(--font-mono);font-size:11px;fill:var(--muted);}
-.mc-resample{
-  font-family:var(--font-mono);font-size:.72rem;color:var(--muted);
-  background:none;border:0;padding:0;cursor:pointer;
-}
-.mc-resample:hover{color:var(--accent);}
-html:not(.js) .mc-resample{display:none;}
+.equation{color:var(--accent);text-align:center;min-width:0;}
+.equation-content{display:inline-block;width:max-content;font-size:clamp(.95rem,1.45vw,1.15rem);}
+.equation math{font-size:1.2em;}
+.equation mjx-container[jax="CHTML"][display="true"]{margin:0;}
 
 /* Scan strip */
 .scan-strip{border-bottom:1px solid var(--line);background:var(--surface);}
@@ -190,38 +241,47 @@ html:not(.js) .mc-resample{display:none;}
 }
 .section-intro{color:var(--muted);max-width:38rem;margin:calc(-1*var(--s3)) 0 var(--s5);}
 
-/* Projects bento */
-.bento{display:grid;gap:var(--s4);}
-@media(min-width:48rem){
-  .bento{grid-template-columns:repeat(2,1fr);}
-  .bento .span-2{grid-column:span 2;}
+/* Projects: one independent article per row; duplicate an article to add more. */
+.project-list{display:grid;border-top:1px solid var(--line);}
+.project-row{
+  display:grid;grid-template-columns:11.5rem minmax(0,1fr) 1.5rem;
+  display:grid;grid-template-columns:minmax(0,1fr) 1.5rem;
+  gap:var(--s6);padding-block:var(--s6);border-bottom:1px solid var(--line);
+  align-items:start;
 }
-.card{
-  background:var(--surface);border:1px solid var(--line);
-  border-radius:var(--radius);padding:var(--s5);
-  display:flex;flex-direction:column;gap:var(--s3);
+.project-art{
+  aspect-ratio:1.45;display:grid;place-items:center;
+  border:1px solid var(--line);border-radius:8px;background:var(--surface);
+  color:var(--accent);overflow:hidden;
 }
-.card:hover{border-color:#5c5138;}
-.card .meta{
+.project-art svg{display:block;width:100%;height:auto;}
+.project-art .grid-line{stroke:var(--line);stroke-width:1;}
+.project-art .secondary{stroke:var(--brass);}
+.project-body{display:flex;flex-direction:column;gap:var(--s3);min-width:0;}
+.project-row .meta{
   font-family:var(--font-mono);font-size:.74rem;color:var(--muted);
-  display:flex;justify-content:space-between;gap:var(--s3);flex-wrap:wrap;
+  display:flex;gap:var(--s2) var(--s4);flex-wrap:wrap;
 }
-.card h3{
-  font-family:var(--font-display);font-size:1.25rem;font-weight:600;line-height:1.25;
+.project-row h3{
+  font-family:var(--font-display);font-size:1.25rem;font-weight:600;line-height:1.3;
 }
-.card h3 a{color:var(--text);}
-.card h3 a:hover{color:var(--accent);text-decoration:none;}
+.project-row h3 a{color:var(--text);}
+.project-row h3 a:hover{color:var(--accent);text-decoration:none;}
+.project-row p{color:var(--muted);font-size:.94rem;}
+.project-link{color:var(--muted);font-size:1.3rem;line-height:1.2;}
+.project-link:hover{color:var(--accent);text-decoration:none;}
 .metric-row{display:flex;gap:var(--s5);flex-wrap:wrap;}
-.metric .num{
-  font-family:var(--font-mono);font-size:1.35rem;color:var(--accent);
-}
+.metric .num{font-family:var(--font-mono);font-size:1.1rem;color:var(--accent);}
 .metric .lbl{font-size:.8rem;color:var(--muted);}
-.card p{color:var(--muted);font-size:.94rem;}
 .chip-row{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:auto;}
 .chip{
   font-family:var(--font-mono);font-size:.72rem;color:var(--text);
   background:var(--surface-2);border:1px solid var(--line);
-  padding:.2rem .6rem;border-radius:999px;white-space:nowrap;
+  padding:.2rem .6rem;border-radius:999px;
+}
+@media(max-width:47.99rem){
+  .project-row{grid-template-columns:minmax(0,1fr) 1.5rem;gap:var(--s4);}
+  .project-art{grid-column:1 / -1;width:100%;max-width:18rem;}
 }
 
 /* About */
@@ -279,7 +339,7 @@ html:not(.js) .mc-resample{display:none;}
 
 /* ============ Reading — iPod-classic Cover Flow ============ */
 .reading .ipod{
-  background:linear-gradient(180deg,#0c0a08,#1b170f);
+  background:linear-gradient(180deg,var(--reading-top),var(--reading-bottom));
   border:1px solid var(--line);border-radius:var(--radius);
   padding:var(--s5) var(--s4) var(--s4);
 }
@@ -358,7 +418,7 @@ html.js .book{
 .site-footer .fine{font-family:var(--font-mono);font-size:.74rem;color:var(--muted);}
 
 /* ============ Motion ============ */
-section[id],#top{scroll-margin-top:4.5rem;} /* anchors clear the sticky header */
+@media(min-width:56rem){section[id],#top{scroll-margin-top:4.5rem;}} /* anchors clear the sticky header */
 
 @media (prefers-reduced-motion:no-preference){
   /* Hero entrance: staggered rise on page load (pure CSS, works without JS) */
@@ -393,10 +453,10 @@ section[id],#top{scroll-margin-top:4.5rem;} /* anchors clear the sticky header *
   .btn{transition:transform .18s ease,background .18s ease,border-color .18s ease;}
   @media (hover:hover){
     .btn:hover{transform:translateY(-2px);}
-    .card:hover,.timeline .entry:hover,.music .entry:hover{
+    .timeline .entry:hover,.music .entry:hover{
       transform:translateY(-4px);
-      box-shadow:0 14px 30px rgba(0,0,0,.35);
-      border-color:#4a5140;
+      box-shadow:0 14px 30px var(--shadow);
+      border-color:var(--hover-border);
     }
   }
 }
@@ -421,6 +481,9 @@ section[id],#top{scroll-margin-top:4.5rem;} /* anchors clear the sticky header *
       <a href="https://github.com/maxwellhanks" aria-label="GitHub profile">
         <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
       </a>
+      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Switch to light mode" aria-pressed="true" title="Switch to light mode">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.9 13.1A9 9 0 0 1 10.9 3.1 9 9 0 1 0 20.9 13.1Z"/></svg>
+      </button>
       <a href="https://linkedin.com/in/maxwell-hanks" aria-label="LinkedIn profile">
         <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13.6 0H2.4C1.1 0 0 1.1 0 2.4v11.2C0 14.9 1.1 16 2.4 16h11.2c1.3 0 2.4-1.1 2.4-2.4V2.4C16 1.1 14.9 0 13.6 0ZM4.9 13.6H2.5V6.2h2.4v7.4ZM3.7 5.1a1.4 1.4 0 1 1 0-2.8 1.4 1.4 0 0 1 0 2.8Zm9.9 8.5h-2.4V9.9c0-.9 0-2-1.2-2s-1.4 1-1.4 2v3.7H6.2V6.2h2.3v1h.1c.3-.6 1.1-1.2 2.3-1.2 2.4 0 2.9 1.6 2.9 3.7v3.9Z"/></svg>
       </a>
@@ -433,6 +496,7 @@ section[id],#top{scroll-margin-top:4.5rem;} /* anchors clear the sticky header *
 <!-- ============ HERO ============ -->
 <section class="hero" id="top">
   <div class="wrap hero-grid">
+  <div class="wrap">
     <div>
       <div class="hero-id" data-reveal style="--i:0">
         <img class="avatar" src="headshot.png" alt="Maxwell Hanks" style="object-fit:cover">
@@ -447,22 +511,24 @@ section[id],#top{scroll-margin-top:4.5rem;} /* anchors clear the sticky header *
       </div>
     </div>
 
-    <figure class="spread-card" data-reveal style="--i:3" role="img" aria-label="Monte Carlo simulation: five simulated random-walk paths diverging from a common starting value inside a two-sigma root-t envelope">
-      <svg id="mcChart" viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <line class="mc-mean" x1="0" y1="105" x2="516" y2="105"/>
-        <path class="mc-env" d="M0,105 L21.5,92.7 L43,87.7 L86,80.5 L129,75 L193.5,68.2 L258,62.6 L344,56 L430,50.2 L516,45"/>
-        <path class="mc-env" d="M0,105 L21.5,117.3 L43,122.3 L86,129.5 L129,135 L193.5,141.8 L258,147.4 L344,154 L430,159.8 L516,165"/>
-        <text class="mc-label" x="524" y="49">+2σ</text>
-        <text class="mc-label" x="524" y="109">S₀</text>
-        <text class="mc-label" x="524" y="169">−2σ</text>
-        <g id="mcPaths">
-          <path class="mc-path hi" d="M0,105 L26,98 L52,112 L77,101 L103,88 L129,95 L155,80 L181,86 L206,72 L232,83 L258,70 L284,61 L310,74 L335,66 L361,55 L387,68 L413,58 L439,49 L464,62 L490,54 L516,45"/>
-        </g>
-      </svg>
-      <figcaption>
-        <span>monte_carlo · 5 paths · 120 steps</span>
-        <button type="button" id="mcResample" class="mc-resample">↻ resample</button>
-      </figcaption>
+    <figure class="equation-card" data-reveal style="--i:3">
+      <figcaption>Measure &amp; integration</figcaption>
+      <!-- Edit data-latex to change the equation rendered by MathJax.
+           The native MathML below keeps this equation visible offline. -->
+      <div class="equation" id="heroEquation" data-latex="\int_\Omega f\,\mathrm{d}\mu = \int_\Omega f(\omega)\,\mathrm{d}\mu(\omega)">
+        <div class="equation-content" id="equationContent">
+          <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+            <semantics>
+              <mrow>
+                <msub><mo largeop="true">∫</mo><mi>Ω</mi></msub><mi>f</mi><mspace width="0.167em"/><mi mathvariant="normal">d</mi><mi>μ</mi>
+                <mo>=</mo>
+                <msub><mo largeop="true">∫</mo><mi>Ω</mi></msub><mi>f</mi><mo>(</mo><mi>ω</mi><mo>)</mo><mspace width="0.167em"/><mi mathvariant="normal">d</mi><mi>μ</mi><mo>(</mo><mi>ω</mi><mo>)</mo>
+              </mrow>
+              <annotation encoding="application/x-tex">\int_\Omega f\,\mathrm{d}\mu = \int_\Omega f(\omega)\,\mathrm{d}\mu(\omega)</annotation>
+            </semantics>
+          </math>
+        </div>
+      </div>
     </figure>
   </div>
 </section>
@@ -490,48 +556,81 @@ section[id],#top{scroll-margin-top:4.5rem;} /* anchors clear the sticky header *
   <div class="wrap">
     <p class="eyebrow" data-animate>Projects</p>
     <h2 data-animate>Selected work</h2>
-    <p class="section-intro" data-animate>Four quantitative projects, each validated out-of-sample. Code on <a href="https://github.com/maxwellhanks">GitHub</a>.</p>
-    <div class="bento" data-stagger>
-      <article class="card">
+    <p class="section-intro" data-animate>Quantitative projects across machine learning, statistics, and finance. Code on <a href="https://github.com/maxwellhanks">GitHub</a>.</p>
+    <!-- Add a project by copying one complete project-row article below. -->
+    <div class="project-list">
+      <article class="project-row" data-animate>
+        <!-- Optional: replace this decorative diagram with an img of your project. -->
+        <div class="project-art" aria-hidden="true">
+          <svg viewBox="0 0 220 145" fill="none"><path class="grid-line" d="M22 26H198M22 56H198M22 86H198M22 116H198M22 20V124M66 20V124M110 20V124M154 20V124M198 20V124"/><path d="M22 99L37 93L51 101L66 78L81 84L95 62L110 74L125 58L140 66L154 40L169 49L183 33L198 26" fill="none" stroke="currentColor" stroke-width="2.5"/><path class="secondary" d="M22 101C60 91 63 90 94 76S156 50 198 31" fill="none" stroke-width="1.5" stroke-dasharray="4 4"/></svg>
+        </div>
+        <div class="project-body">
         <div class="meta"><span>2026 · Python</span><span>regime-adaptive forecasting</span></div>
         <h3><a href="https://github.com/maxwellhanks/AlgoJam-3-Strategy">IMC x UQ FinTech AlgoJam 3 - regime-adaptive multi-strategy forecasting</a></h3>
+        <p>Designed instrument-specific time-series models spanning peg mean-reversion, Holt's ETS trend-following, volatility-gated regime-switching, and seasonal decomposition against a fitted annual cycle. All positions routed through a budget-constrained sizer with priority-ranked trimming.</p>
         <div class="metric-row">
           <div class="metric"><div class="num"><span data-count="3">3</span> / <span data-count="124">124</span></div><div class="lbl">final placing</div></div>
           <div class="metric"><div class="num"><span data-count="9">9</span></div><div class="lbl">instruments traded</div></div>
           <div class="metric"><div class="num">ETS</div><div class="lbl">framework</div></div>
         </div>
-        <p>Designed instrument-specific time-series models spanning peg mean-reversion, Holt's ETS trend-following, volatility-gated regime-switching, and seasonal decomposition against a fitted annual cycle. All positions routed through a budget-constrained sizer with priority-ranked trimming.</p>
         <div class="chip-row"><span class="chip">Holt's ETS</span><span class="chip">regime-switching</span><span class="chip">seasonal decomposition</span><span class="chip">minority game</span></div>
+      
+        </div>
+        <a class="project-link" href="https://github.com/maxwellhanks/AlgoJam-3-Strategy" aria-label="View IMC x UQ FinTech AlgoJam 3 - regime-adaptive multi-strategy forecasting" tabindex="-1"><span aria-hidden="true">↗</span></a>
       </article>
-      <article class="card">
+      <article class="project-row" data-animate>
+        <!-- Optional: replace this decorative diagram with an img of your project. -->
+        <div class="project-art" aria-hidden="true">
+          <svg viewBox="0 0 220 145" fill="none"><path class="grid-line" d="M22 35H198M22 75H198M22 115H198"/><path d="M22 77L37 55L51 39L66 51L81 83L95 101L110 96L125 70L140 45L154 51L169 81L183 92L198 72" fill="none" stroke="currentColor" stroke-width="2.5"/><path class="secondary" d="M22 67L37 76L51 86L66 77L81 61L95 52L110 57L125 77L140 91L154 85L169 64L183 54L198 70" fill="none" stroke-width="2"/></svg>
+        </div>
+        <div class="project-body">
         <div class="meta"><span>2026 · Python</span><span>statistical arbitrage</span></div>
         <h3><a href="https://github.com/maxwellhanks/Susquehanna-Algothon-26-Strategy">Susquehanna Algothon ’26 - adaptive multi-model time-series trading</a></h3>
+        <p>Selected cointegrated pairs offline via Engle–Granger and ADF stationarity testing, modelled mean-reverting spreads as Ornstein–Uhlenbeck processes, and hedged residual exposure against the index. Volatility-scaled sizing; validated by walk-forward backtesting on unseen data.</p>
         <div class="metric-row">
           <div class="metric"><div class="num"><span data-count="161">161</span> / <span data-count="394">394</span></div><div class="lbl">final placing</div></div>
           <div class="metric"><div class="num"><span data-count="51">51</span></div><div class="lbl">instruments traded</div></div>
           <div class="metric"><div class="num">OU</div><div class="lbl">spreads</div></div>
         </div>
-        <p>Selected cointegrated pairs offline via Engle–Granger and ADF stationarity testing, modelled mean-reverting spreads as Ornstein–Uhlenbeck processes, and hedged residual exposure against the index. Volatility-scaled sizing; validated by walk-forward backtesting on unseen data.</p>
         <div class="chip-row"><span class="chip">cointegration</span><span class="chip">ADF / Engle–Granger</span><span class="chip">walk-forward</span><span class="chip">vol targeting</span></div>
+      
+        </div>
+        <a class="project-link" href="https://github.com/maxwellhanks/Susquehanna-Algothon-26-Strategy" aria-label="View Susquehanna Algothon ’26 - adaptive multi-model time-series trading" tabindex="-1"><span aria-hidden="true">↗</span></a>
       </article>
-      <article class="card">
+      <article class="project-row" data-animate>
+        <!-- Optional: replace this decorative diagram with an img of your project. -->
+        <div class="project-art" aria-hidden="true">
+          <svg viewBox="0 0 220 145" fill="none"><path class="grid-line" d="M24 24V122H198M24 48H198M24 84H198"/><path d="M24 30C66 36 64 69 101 82S159 100 198 113" fill="none" stroke="currentColor" stroke-width="2.5"/><path class="secondary" d="M24 30L68 50L111 73L155 95L198 113" fill="none" stroke-width="1.5" stroke-dasharray="4 4"/></svg>
+        </div>
+        <div class="project-body">
         <div class="meta"><span>2026 · Python, MATLAB</span></div>
         <h3><a href="https://github.com/maxwellhanks">Optimal execution via HJB &amp; neural networks</a></h3>
+        <p>Formulated liquidation as continuous-time stochastic control, solved the linear-quadratic benchmark analytically, and extended to nonlinear market impact with neural-network approximation. (Still a work in progress :D)</p>
         <div class="metric-row">
           <div class="metric"><div class="num">ε-opt</div><div class="lbl">validated vs dynamic programming</div></div>
         </div>
-        <p>Formulated liquidation as continuous-time stochastic control, solved the linear-quadratic benchmark analytically, and extended to nonlinear market impact with neural-network approximation. (Still a work in progress :D)</p>
         <div class="chip-row"><span class="chip">stochastic control</span><span class="chip">HJB</span><span class="chip">neural nets</span></div>
+      
+        </div>
+        <a class="project-link" href="https://github.com/maxwellhanks" aria-label="View Optimal execution via HJB &amp; neural networks" tabindex="-1"><span aria-hidden="true">↗</span></a>
       </article>
-      <article class="card">
+      <article class="project-row" data-animate>
+        <!-- Optional: replace this decorative diagram with an img of your project. -->
+        <div class="project-art" aria-hidden="true">
+          <svg viewBox="0 0 220 145" fill="none"><rect x="36" y="20" width="26" height="19" rx="2" fill="currentColor" opacity="0.9"/><rect x="67" y="20" width="26" height="19" rx="2" fill="currentColor" opacity="0.27"/><rect x="98" y="20" width="26" height="19" rx="2" fill="currentColor" opacity="0.39"/><rect x="129" y="20" width="26" height="19" rx="2" fill="currentColor" opacity="0.51"/><rect x="160" y="20" width="26" height="19" rx="2" fill="currentColor" opacity="0.15"/><rect x="36" y="44" width="26" height="19" rx="2" fill="currentColor" opacity="0.27"/><rect x="67" y="44" width="26" height="19" rx="2" fill="currentColor" opacity="0.9"/><rect x="98" y="44" width="26" height="19" rx="2" fill="currentColor" opacity="0.51"/><rect x="129" y="44" width="26" height="19" rx="2" fill="currentColor" opacity="0.15"/><rect x="160" y="44" width="26" height="19" rx="2" fill="currentColor" opacity="0.27"/><rect x="36" y="68" width="26" height="19" rx="2" fill="currentColor" opacity="0.39"/><rect x="67" y="68" width="26" height="19" rx="2" fill="currentColor" opacity="0.51"/><rect x="98" y="68" width="26" height="19" rx="2" fill="currentColor" opacity="0.9"/><rect x="129" y="68" width="26" height="19" rx="2" fill="currentColor" opacity="0.27"/><rect x="160" y="68" width="26" height="19" rx="2" fill="currentColor" opacity="0.39"/><rect x="36" y="92" width="26" height="19" rx="2" fill="currentColor" opacity="0.51"/><rect x="67" y="92" width="26" height="19" rx="2" fill="currentColor" opacity="0.15"/><rect x="98" y="92" width="26" height="19" rx="2" fill="currentColor" opacity="0.27"/><rect x="129" y="92" width="26" height="19" rx="2" fill="currentColor" opacity="0.9"/><rect x="160" y="92" width="26" height="19" rx="2" fill="currentColor" opacity="0.51"/><rect x="36" y="116" width="26" height="19" rx="2" fill="currentColor" opacity="0.15"/><rect x="67" y="116" width="26" height="19" rx="2" fill="currentColor" opacity="0.27"/><rect x="98" y="116" width="26" height="19" rx="2" fill="currentColor" opacity="0.39"/><rect x="129" y="116" width="26" height="19" rx="2" fill="currentColor" opacity="0.51"/><rect x="160" y="116" width="26" height="19" rx="2" fill="currentColor" opacity="0.9"/></svg>
+        </div>
+        <div class="project-body">
         <div class="meta"><span>2026 · Python, NumPy, Pandas</span></div>
         <h3><a href="https://github.com/maxwellhanks/Barra-style-multi-factor-equity-risk-model">Barra-style multi-factor equity risk model</a></h3>
+        <p>Daily factor returns via cross-sectional WLS; EWMA/Newey–West factor covariance with PSD enforcement and shrunk specific risk. Euler risk decomposition and walk-forward volatility-forecast validation.</p>
         <div class="metric-row">
           <div class="metric"><div class="num"><span data-count="94">94</span></div><div class="lbl">stock universe</div></div>
           <div class="metric"><div class="num"><span data-count="6">6</span></div><div class="lbl">style factors</div></div>
         </div>
-        <p>Daily factor returns via cross-sectional WLS; EWMA/Newey–West factor covariance with PSD enforcement and shrunk specific risk. Euler risk decomposition and walk-forward volatility-forecast validation.</p>
         <div class="chip-row"><span class="chip">factor models</span><span class="chip">covariance estimation</span><span class="chip">risk decomposition</span></div>
+      
+        </div>
+        <a class="project-link" href="https://github.com/maxwellhanks/Barra-style-multi-factor-equity-risk-model" aria-label="View Barra-style multi-factor equity risk model" tabindex="-1"><span aria-hidden="true">↗</span></a>
       </article>
     </div>
   </div>
@@ -803,59 +902,6 @@ section[id],#top{scroll-margin-top:4.5rem;} /* anchors clear the sticky header *
 </script>
 
 <script>
-/* ---- Hero: Monte Carlo random-walk simulation ----
-   Draws PATHS independent Gaussian random walks from a common S0.
-   The static path in #mcPaths is the no-JS fallback and is replaced here.
-   SIGMA is tuned so the terminal spread sits near the ±2σ√t envelope. */
-(function () {
-  var svg = document.getElementById('mcChart');
-  if (!svg) return;
-  var NS = 'http://www.w3.org/2000/svg';
-  var STEPS = 120, PATHS = 5, W = 516, Y0 = 105, SIGMA = 2.74;
-  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  function gauss() {              /* Box–Muller */
-    var u = 0, v = 0;
-    while (u === 0) u = Math.random();
-    while (v === 0) v = Math.random();
-    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
-  }
-
-  function walk() {
-    var y = Y0, d = 'M0,' + Y0;
-    for (var i = 1; i <= STEPS; i++) {
-      y = Math.max(12, Math.min(198, y + SIGMA * gauss()));
-      d += ' L' + (i * W / STEPS).toFixed(1) + ',' + y.toFixed(1);
-    }
-    return d;
-  }
-
-  function run() {
-    var g = document.getElementById('mcPaths');
-    g.textContent = '';
-    for (var p = 0; p < PATHS; p++) {
-      var el = document.createElementNS(NS, 'path');
-      el.setAttribute('class', 'mc-path' + (p === PATHS - 1 ? ' hi' : ''));
-      el.setAttribute('d', walk());
-      g.appendChild(el);
-      if (!reduce) {
-        var len = el.getTotalLength();
-        el.style.strokeDasharray = len;
-        el.style.strokeDashoffset = len;
-        el.style.transition = 'stroke-dashoffset 2.2s ease-out ' + (0.5 + p * 0.12) + 's';
-        el.getBoundingClientRect();   /* force reflow so the transition fires */
-        el.style.strokeDashoffset = '0';
-      }
-    }
-  }
-
-  run();
-  var btn = document.getElementById('mcResample');
-  if (btn) btn.addEventListener('click', run);
-})();
-</script>
-
-<script>
 /* ---- iPod-classic Cover Flow (bookshelf) ----
    Runs whether or not reduced-motion is set: with reduced motion the CSS
    transition is absent, so covers reposition instantly instead of animating. */
@@ -924,6 +970,62 @@ section[id],#top{scroll-margin-top:4.5rem;} /* anchors clear the sticky header *
   layout();
 })();
 </script>
+
+
+<script>
+/* Theme control is independent of animation preferences. */
+(function () {
+  var root = document.documentElement;
+  var button = document.getElementById('themeToggle');
+  function syncButton() {
+    var dark = root.dataset.theme !== 'light';
+    var label = 'Switch to ' + (dark ? 'light' : 'dark') + ' mode';
+    button.setAttribute('aria-pressed', String(dark));
+    button.setAttribute('aria-label', label);
+    button.title = label;
+  }
+  button.addEventListener('click', function () {
+    root.dataset.theme = root.dataset.theme === 'light' ? 'dark' : 'light';
+    try { localStorage.setItem('maxwell-portfolio-theme', root.dataset.theme); }
+    catch (e) { /* Toggling still works if storage is unavailable. */ }
+    syncButton();
+  });
+  syncButton();
+})();
+
+/* Fit the complete equation without clipping at small viewport widths. */
+function fitHeroEquation() {
+  var box = document.getElementById('heroEquation');
+  var content = document.getElementById('equationContent');
+  if (!box || !content) return;
+  content.style.fontSize = '';
+  var width = content.getBoundingClientRect().width;
+  if (width > box.clientWidth && box.clientWidth > 0) {
+    var size = parseFloat(window.getComputedStyle(content).fontSize);
+    content.style.fontSize = (size * box.clientWidth / width * 0.98) + 'px';
+  }
+}
+window.addEventListener('resize', fitHeroEquation);
+fitHeroEquation();
+if (document.fonts) document.fonts.ready.then(fitHeroEquation);
+
+/* MathJax renders the editable LaTeX when online; native MathML remains offline. */
+window.MathJax = {
+  startup: {
+    typeset: false,
+    pageReady: function () {
+      var box = document.getElementById('heroEquation');
+      return MathJax.tex2chtmlPromise(box.dataset.latex, {display: true})
+        .then(function (node) {
+          document.getElementById('equationContent').replaceChildren(node);
+          fitHeroEquation();
+        })
+        .catch(function () { /* Preserve the native fallback if loading fails. */ });
+    }
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"></script>
 
 </body>
 </html>
